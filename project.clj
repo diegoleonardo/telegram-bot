@@ -10,5 +10,5 @@
   :min-lein-version "2.0.0"
   :uberjar-name "work-permit-bot-standalone.jar"
   :jvm-opts ["-Dclojure.server.myrepl={:port 5555 :accept,clojure.core.server/repl}"]
-  :main telegram-bot-test.core
+  :main work-permit-bot.core
   :profiles {:production {:env {:production true}}})
