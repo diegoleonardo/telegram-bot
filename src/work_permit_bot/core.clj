@@ -3,13 +3,18 @@
             [morse.api :as t]
             [morse.polling :as p]
             [clojure.string :as str]
-            [clojure.core.async :as async]
-            [reader.spreadsheet :as sr])
+            [reader.spreadsheet :as sr]
+            [integrant.core :as ig])
   (:gen-class))
 
-(def token "1223614094:AAEbGuXIVEu_OdpJME0LHISdjFX9lWzq4XA")
+(defn getenv
+  ([env-name] (getenv env-name nil))
+  ([env-name default-value]
+   (or (System/getenv env-name) default-value)))
 
-(def greetings ["olá" "olá!" "hola" "hola!" "hi" "hi!" "oi" "oi!" "oi, tudo bem?" "E aí" "hi there" "hi there!"])
+(def token (getenv "TELEGRAM_API_TOKEN"))
+
+(def greetings ["olá" "olá!" "hola" "hola!" "hi" "hello" "hi there" "hi!" "oi" "oi!" "oi, tudo bem?" "E aí" "hi there" "hi there!"])
 (def positive-answer ["sim" "yes" "si" "ok" "claro" "yep" "positivo"])
 (def negative-answer ["não" "no" "nop" "ñ" "não obrigado" "não, obrigado!" "negativo"])
 
@@ -50,25 +55,27 @@
 
   (h/message-fn process-inc-message))
 
-(def channel (p/start token bot-api))
+(def config (ig/read-string (slurp "./resources/system.edn")))
 
-(defn start-server
-  []
-  (p/start token bot-api))
+(derive :bot/telegram :duct/daemon)
 
-(defn stop-server
-  []
+(defmethod ig/init-key :handler/foo [_ {}]
+  bot-api)
+
+(defmethod ig/prep-key :bot/telegram [_ opts]
+  (sr/initialize)
+  (reset! companies (sr/read-companies)))
+
+(defmethod ig/init-key :bot/telegram [_ {:keys [bot-api]}]
+  {:channel (p/start token bot-api)})
+
+(defmethod ig/halt-key! :bot/telegram [_ {:keys [channel]}]
   (p/stop channel))
 
 (defn -main
   [& args]
-  (println "Initializing app")
-  (sr/initialize)
-  (reset! companies (sr/read-companies))
-  (loop []
-    (do (println "Doing things") (Thread/sleep 20000))
-    (recur)))
+  (-> config
+      ig/prep
+      ig/init))
 
 #_(-main)
-
-#_(stop-server)

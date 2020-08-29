@@ -1,0 +1,2 @@
+{:handler/foo {}
+ :bot/telegram {:bot-api #ig/ref :handler/foo}}

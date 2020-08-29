@@ -5,7 +5,9 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [morse "0.4.3"]
-                 [dk.ative/docjure "1.12.0"]]
+                 [dk.ative/docjure "1.12.0"]
+                 [integrant "0.8.0"]
+                 [integrant/repl "0.3.1"]]
   :repl-options {:init-ns work-permit-bot.core}
   :min-lein-version "2.0.0"
   :uberjar-name "work-permit-bot-standalone.jar"
