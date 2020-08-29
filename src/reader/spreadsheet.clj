@@ -4,7 +4,7 @@
             [clojure.java.io :as io]
             [commons.utils :as util]))
 
-(def idbei-url (util/getenv "DATA_SOURCE"))
+(def data-source-url (util/getenv "TELEGRAM_BOT_DATA_SOURCE"))
 
 (defn get-data!
   [url]
@@ -24,7 +24,7 @@
 
 (defn process-dbei-data
   []
-  (->> (get-data! idbei-url)
+  (->> (get-data! data-source-url)
        (read-spreadsheet "Sheet1")
        (remove-unnecessary-data #(or (nil? (:employername %)) (nil? (:grandtotal %))))))
 
@@ -32,7 +32,7 @@
   (str employername " \n"))
 
 (defn parse-spreedsheet []
-  (let [body (get-data! idbei-url)]
+  (let [body (get-data! data-source-url)]
    (with-open [stream (clojure.java.io/input-stream body)]
      (->> (spreadsheet/load-workbook stream)
           (spreadsheet/select-sheet "Sheet1")
@@ -66,9 +66,9 @@
   dbei-data
 
   (def data (memoize get-data!))
-  (def ireland-data (data idbei-url))
+  (def ireland-data (data data-source-url))
 
-  (let [body (get-data! idbei-url)]
+  (let [body (get-data! data-source-url)]
     (with-open [stream (clojure.java.io/input-stream body)]
       (->> (spreadsheet/load-workbook stream)
            (spreadsheet/select-sheet "Sheet1")

@@ -13,4 +13,4 @@
   :uberjar-name "work-permit-bot-standalone.jar"
   :jvm-opts ["-Dclojure.server.myrepl={:port 5555 :accept,clojure.core.server/repl}"]
   :main work-permit-bot.core
-  :profiles {:production {:env {:production true}}})
+  :profiles {:production {:env {:foo "FOO" :bar "BAR"}}})

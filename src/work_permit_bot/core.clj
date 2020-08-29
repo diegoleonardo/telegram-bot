@@ -63,7 +63,7 @@
   (reset! companies (sr/read-companies)))
 
 (defmethod ig/init-key :bot/telegram [_ {:keys [bot-api]}]
-  {:channel (p/start token bot-api)})
+  (p/start token bot-api))
 
 (defmethod ig/halt-key! :bot/telegram [_ {:keys [channel]}]
   (p/stop channel))
