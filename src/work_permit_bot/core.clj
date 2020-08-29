@@ -4,15 +4,11 @@
             [morse.polling :as p]
             [clojure.string :as str]
             [reader.spreadsheet :as sr]
-            [integrant.core :as ig])
+            [integrant.core :as ig]
+            [commons.utils :as util])
   (:gen-class))
 
-(defn getenv
-  ([env-name] (getenv env-name nil))
-  ([env-name default-value]
-   (or (System/getenv env-name) default-value)))
-
-(def token (getenv "TELEGRAM_API_TOKEN"))
+(def token (util/getenv "TELEGRAM_API_TOKEN"))
 
 (def greetings ["olá" "olá!" "hola" "hola!" "hi" "hello" "hi there" "hi!" "oi" "oi!" "oi, tudo bem?" "E aí" "hi there" "hi there!"])
 (def positive-answer ["sim" "yes" "si" "ok" "claro" "yep" "positivo"])

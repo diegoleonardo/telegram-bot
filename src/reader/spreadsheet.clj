@@ -1,9 +1,10 @@
 (ns reader.spreadsheet
   (:require [dk.ative.docjure.spreadsheet :as spreadsheet]
             [clj-http.client :as client]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [commons.utils :as util]))
 
-(def idbei-url "https://dbei.gov.ie/en/Publications/Publication-files/Permits-issued-to-Companies-2020.xlsx")
+(def idbei-url (util/getenv "DATA_SOURCE"))
 
 (defn get-data!
   [url]
