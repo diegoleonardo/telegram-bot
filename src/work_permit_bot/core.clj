@@ -55,23 +55,36 @@
 
 (derive :bot/telegram :duct/daemon)
 
-(defmethod ig/init-key :handler/foo [_ {}]
+(defn start-bot []
+  (p/start token bot-api))
+
+#_(def channel (p/start token bot-api))
+
+#_(defn stop-bot []
+  (p/stop channel))
+
+#_(stop-bot)
+
+#_(defmethod ig/init-key :handler/foo [_ {}]
   bot-api)
 
-(defmethod ig/prep-key :bot/telegram [_ opts]
+#_(defmethod ig/prep-key :bot/telegram [_ opts]
   (sr/initialize)
   (reset! companies (sr/read-companies)))
 
-(defmethod ig/init-key :bot/telegram [_ {:keys [bot-api]}]
-  (p/start token bot-api))
+(defmethod ig/init-key :bot/telegram [_ {}]
+  (sr/initialize)
+  (reset! companies (sr/read-companies))
+  (start-bot))
 
 (defmethod ig/halt-key! :bot/telegram [_ {:keys [channel]}]
   (p/stop channel))
 
 (defn -main
   [& args]
+  #_(p/stop (start-bot))
   (-> config
-      ig/prep
+      #_ig/prep
       ig/init))
 
 #_(-main)
